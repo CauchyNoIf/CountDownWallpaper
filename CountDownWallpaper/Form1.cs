@@ -21,7 +21,7 @@ namespace CountDownWallpaper
         [DllImport("user32.dll")]
         public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
-        DateTime destTime = DateTime.Today.AddDays(9.0);
+        DateTime targetTime = DateTime.Today.AddDays(9.0);
 
         string strImageDirectory = Environment.CurrentDirectory + "\\Wallpaper\\";
         string[] strImgList;
@@ -57,11 +57,11 @@ namespace CountDownWallpaper
             return strlistNames.ToArray();
         }
 
-        private string[] generateHourList()
+        private string[] generateDigitalList(int nMaxNum)
         {
             List<string> hourList = new List<string>();
 
-            for (int i = 0; i < 24; i++)
+            for (int i = 0; i < nMaxNum; i++)
             {
                 if (i < 10)
                 {
@@ -76,43 +76,6 @@ namespace CountDownWallpaper
             return hourList.ToArray();
         }
 
-        private string[] generateMinuteList()
-        {
-            List<string> minuteList = new List<string>();
-
-            for (int i = 0; i < 60; i++)
-            {
-                if (i < 10)
-                {
-                    minuteList.Add("0" + Convert.ToString(i));
-                }
-                else
-                {
-                    minuteList.Add(Convert.ToString(i));
-                }
-            }
-
-            return minuteList.ToArray();
-        }
-
-        private string[] generateSecondList()
-        {
-            List<string> secondList = new List<string>();
-
-            for (int i = 0; i < 60; i++)
-            {
-                if (i < 10)
-                {
-                    secondList.Add("0" + Convert.ToString(i));
-                }
-                else
-                {
-                    secondList.Add(Convert.ToString(i));
-                }
-            }
-
-            return secondList.ToArray();
-        }
        
         public Form1()
         {
@@ -125,12 +88,6 @@ namespace CountDownWallpaper
             directoryInfo = new DirectoryInfo(Environment.CurrentDirectory + "\\tmp");
             if (!directoryInfo.Exists)
                 Directory.CreateDirectory(Environment.CurrentDirectory + "\\tmp");
-            hourDomainUpDown.Items.AddRange(generateHourList());
-            minuteDomainUpDown.Items.AddRange(generateMinuteList());
-            secondDomainUpDown.Items.AddRange(generateSecondList());
-
-            destTime = getIniTime();
-            nDisplayTime = getDisplayTime();
 
             strImgList = getImageNames(strImageDirectory);
 
@@ -140,35 +97,21 @@ namespace CountDownWallpaper
                 Environment.Exit(0);
             }
 
-            hourDomainUpDown.Items.AddRange(generateHourList());
-            minuteDomainUpDown.Items.AddRange(generateMinuteList());
-            secondDomainUpDown.Items.AddRange(generateSecondList());
+            hourDomainUpDown.Items.AddRange(generateDigitalList(24));
+            minuteDomainUpDown.Items.AddRange(generateDigitalList(60));
+            secondDomainUpDown.Items.AddRange(generateDigitalList(60));
 
-            destTime = getIniTime();
+            targetTime = getIniTime();
             nDisplayTime = getDisplayTime();
-
 
             nCount = strImgList.Length;
             srcImg = Image.FromFile(strImgList[0]);
             srcBitmap = new Bitmap(srcImg, screenBounds.Size);
 
-
             m_updateTimer.Tick += M_updateTimer_Tick;
             m_updateTimer.Interval = 1000;
-
-
             m_updateTimer.Start();
             m_elapsedWatch.Start();
-        }
-
-        public static void CustomSleep(int milliseconds)
-        {
-            int start = Environment.TickCount;
-            while (Math.Abs(Environment.TickCount - start) < milliseconds)
-            {
-                // 允许界面响应消息
-                Application.DoEvents();
-            }
         }
 
         private void M_updateTimer_Tick(object sender, EventArgs e)
@@ -182,7 +125,7 @@ namespace CountDownWallpaper
             showBitmap = new Bitmap(srcBitmap);
 
             DateTime currentTime = DateTime.Now;
-            TimeSpan span = destTime - currentTime;
+            TimeSpan span = targetTime - currentTime;
             string strCurrentTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
 
             int dMtime = Convert.ToInt32(currentTime.Millisecond);
@@ -192,14 +135,14 @@ namespace CountDownWallpaper
             using (Graphics graphics = Graphics.FromImage(showBitmap))
 
             {
-                string drawText = "Now is: " + 
-                    strCurrentTime + 
-                    ".\n" + 
-                    (Convert.ToInt32(span.TotalMilliseconds/1000)).ToString() + 
-                    "s  to " + 
-                    destTime.ToString("yyyy/MM/dd HH:mm:ss") +
+                string drawText = "It is " +
+                    strCurrentTime +
+                    ",\n" +
+                    (Convert.ToInt32(span.TotalMilliseconds / 1000)).ToString() +
+                    "s until " +
+                    targetTime.ToString("yyyy/MM/dd HH:mm:ss") +
                     ".";
-                graphics.DrawString(drawText, new Font("TimesNewRoman", 34), Brushes.White, screenBounds.Width/4, 50);
+                graphics.DrawString(drawText, new Font("TimesNewRoman", 34), Brushes.White, screenBounds.Width / 4, 50);
             }
 
             try
@@ -211,7 +154,8 @@ namespace CountDownWallpaper
 
             }
 
-            int ret = SystemParametersInfo(0x0014, 0, Environment.CurrentDirectory + "\\tmp\\createdImg.bmp", 0);
+            // 读取本地图片并设置桌面背景
+            SystemParametersInfo(0x0014, 0, Environment.CurrentDirectory + "\\tmp\\createdImg.bmp", 0);
 
             hourDomainUpDown.Text = strCurrentTime.Substring(11, 2);
             minuteDomainUpDown.Text = strCurrentTime.Substring(14, 2);
@@ -221,8 +165,10 @@ namespace CountDownWallpaper
 
             int offset = lMElapsed2 - lMElapsed1 + dMtime;
 
-            if (offset > 1000)
+            // 避免太小的Interval
+            if (offset >= 800)
                 offset -= 1000;
+
             m_updateTimer.Interval = 1000 - offset;
             m_updateTimer.Start();
             m_elapsedWatch.Restart();
@@ -232,13 +178,13 @@ namespace CountDownWallpaper
 
         public class AppSettings
         {
-            public string TargetTime { get; set; }
-            public int DisplayTime { get; }
+            public string TargetTime { get; set; }      // 目标时间
+            public int DisplayTime { get; }             // 单张展示时长，暂无使用
         }
 
         private DateTime getIniTime()
         {
-            // Deserialize
+            // 反序列化
             XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
             using (StreamReader reader = new StreamReader("TargetTime.xml"))
             {
@@ -251,7 +197,7 @@ namespace CountDownWallpaper
         {
             AppSettings settings = new AppSettings { TargetTime = writeDateTime.ToString("yyyy/MM/dd HH:mm:ss") };
 
-            // Serialize
+            // 序列化
             XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
             using (StreamWriter writer = new StreamWriter("TargetTime.xml"))
             {
@@ -261,7 +207,7 @@ namespace CountDownWallpaper
 
         private int getDisplayTime()
         {
-            // Deserialize
+            // 反序列化
             XmlSerializer serializer = new XmlSerializer(typeof(AppSettings));
             using (StreamReader reader = new StreamReader("TargetTime.xml"))
             {
@@ -337,15 +283,17 @@ namespace CountDownWallpaper
             int inputMinute = DateTime.ParseExact(minuteDomainUpDown.Text, "mm", null).Minute;
             int inputSecond = DateTime.ParseExact(secondDomainUpDown.Text, "ss", null).Second;
 
-            destTime = inputDate.AddHours(inputHour).AddMinutes(inputMinute).AddSeconds(inputSecond);
-            setIniTime(destTime);
+            // 更新目标时间
+            targetTime = inputDate.AddHours(inputHour).AddMinutes(inputMinute).AddSeconds(inputSecond);
+            setIniTime(targetTime);
 
+            // 设置定时器间隔
             int nTimeNow = DateTime.Now.Millisecond;
             m_updateTimer.Interval = 1000 - nTimeNow;
             m_updateTimer.Start();
             m_elapsedWatch.Restart();
 
-            if (destTime < DateTime.Now)
+            if (targetTime < DateTime.Now)
             {
                 MessageBox.Show("不能是过去的时间!");
                 return;
