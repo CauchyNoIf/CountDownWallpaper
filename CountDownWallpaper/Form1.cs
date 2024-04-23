@@ -156,6 +156,9 @@ namespace CountDownWallpaper
             m_updateTimer.Tick += M_updateTimer_Tick;
             m_updateTimer.Interval = 1000;
 
+            int milliseconds = DateTime.Now.Millisecond;
+            if (milliseconds % 1000 != 0)
+                CustomSleep(1000 - milliseconds);
 
             m_updateTimer.Start();
             m_elapsedWatch.Start();
