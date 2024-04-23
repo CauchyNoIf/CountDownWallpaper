@@ -29,7 +29,10 @@ namespace CountDownWallpaper
         /// </summary>
         private void InitializeComponent()
         {
+<<<<<<< HEAD
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+=======
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
             this.setTargetTimeBtn = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.dateDateTimePicker = new System.Windows.Forms.DateTimePicker();
@@ -40,9 +43,15 @@ namespace CountDownWallpaper
             // 
             // setTargetTimeBtn
             // 
+<<<<<<< HEAD
             this.setTargetTimeBtn.Location = new System.Drawing.Point(179, 29);
             this.setTargetTimeBtn.Name = "setTargetTimeBtn";
             this.setTargetTimeBtn.Size = new System.Drawing.Size(91, 53);
+=======
+            this.setTargetTimeBtn.Location = new System.Drawing.Point(171, 56);
+            this.setTargetTimeBtn.Name = "setTargetTimeBtn";
+            this.setTargetTimeBtn.Size = new System.Drawing.Size(91, 26);
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
             this.setTargetTimeBtn.TabIndex = 0;
             this.setTargetTimeBtn.Text = "SetTargetTime";
             this.setTargetTimeBtn.UseVisualStyleBackColor = true;
@@ -98,15 +107,23 @@ namespace CountDownWallpaper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+<<<<<<< HEAD
             this.ClientSize = new System.Drawing.Size(300, 114);
+=======
+            this.ClientSize = new System.Drawing.Size(318, 145);
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
             this.Controls.Add(this.secondDomainUpDown);
             this.Controls.Add(this.minuteDomainUpDown);
             this.Controls.Add(this.hourDomainUpDown);
             this.Controls.Add(this.dateDateTimePicker);
             this.Controls.Add(this.setTargetTimeBtn);
+<<<<<<< HEAD
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+=======
+            this.Name = "Form1";
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
             this.Text = "Countdown Wallpaper";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);

@@ -6,9 +6,15 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("CountDownWallpaper")]
+<<<<<<< HEAD
 [assembly: AssemblyDescription("Coundown wallpaper with seconds.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("rosunchen@163.com")]
+=======
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
 [assembly: AssemblyProduct("CountDownWallpaper")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]

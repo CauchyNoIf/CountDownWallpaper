@@ -12,7 +12,10 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Configuration;
 using System.Xml.Serialization;
+<<<<<<< HEAD
 using System.Diagnostics;
+=======
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
 
 namespace CountDownWallpaper
 {
@@ -31,13 +34,21 @@ namespace CountDownWallpaper
         // 创建一个与屏幕大小相同的位图
         Image srcImg;
         Bitmap srcBitmap;
+<<<<<<< HEAD
         Bitmap showBitmap;
+=======
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
 
         int nCount = 0;
         int nDisplayTime = 30000;
 
         Timer m_updateTimer = new Timer();
+<<<<<<< HEAD
         Stopwatch m_elapsedWatch = new Stopwatch();
+=======
+
+
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
 
 
         private string[] getImageNames(string dir)
@@ -120,6 +131,7 @@ namespace CountDownWallpaper
         {
             InitializeComponent();
 
+<<<<<<< HEAD
             DirectoryInfo directoryInfo = new DirectoryInfo(Environment.CurrentDirectory + "\\Wallpaper");
             if (!directoryInfo.Exists)
                 Directory.CreateDirectory(Environment.CurrentDirectory + "\\Wallpaper");
@@ -127,6 +139,14 @@ namespace CountDownWallpaper
             directoryInfo = new DirectoryInfo(Environment.CurrentDirectory + "\\tmp");
             if (!directoryInfo.Exists)
                 Directory.CreateDirectory(Environment.CurrentDirectory + "\\tmp");
+=======
+            hourDomainUpDown.Items.AddRange(generateHourList());
+            minuteDomainUpDown.Items.AddRange(generateMinuteList());
+            secondDomainUpDown.Items.AddRange(generateSecondList());
+
+            destTime = getIniTime();
+            nDisplayTime = getDisplayTime();
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
 
             strImgList = getImageNames(strImageDirectory);
 
@@ -136,6 +156,7 @@ namespace CountDownWallpaper
                 Environment.Exit(0);
             }
 
+<<<<<<< HEAD
             hourDomainUpDown.Items.AddRange(generateHourList());
             minuteDomainUpDown.Items.AddRange(generateMinuteList());
             secondDomainUpDown.Items.AddRange(generateSecondList());
@@ -144,10 +165,13 @@ namespace CountDownWallpaper
             nDisplayTime = getDisplayTime();
 
 
+=======
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
             nCount = strImgList.Length;
             srcImg = Image.FromFile(strImgList[0]);
             srcBitmap = new Bitmap(srcImg, screenBounds.Size);
 
+<<<<<<< HEAD
 
             m_updateTimer.Tick += M_updateTimer_Tick;
             m_updateTimer.Interval = 1000;
@@ -155,6 +179,16 @@ namespace CountDownWallpaper
 
             m_updateTimer.Start();
             m_elapsedWatch.Start();
+=======
+            m_updateTimer.Tick += M_updateTimer_Tick;
+            m_updateTimer.Interval = 1000;
+
+            int milliseconds = DateTime.Now.Millisecond;
+            if (milliseconds % 1000 != 0)
+                CustomSleep(1000 - milliseconds);
+
+            m_updateTimer.Start();
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
         }
 
         public static void CustomSleep(int milliseconds)
@@ -175,21 +209,45 @@ namespace CountDownWallpaper
                 Environment.Exit(0);
             }
 
+<<<<<<< HEAD
             showBitmap = new Bitmap(srcBitmap);
+=======
+            //if (isSlideShowCheckBox.Checked)
+            //{
+            //    nCount++;
+            //    srcImg = Image.FromFile(strImgList[nCount%strImgList.Length]);
+            //    srcBitmap = new Bitmap(srcImg, screenBounds.Size);
+            //}
+
+
+                
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
 
             DateTime currentTime = DateTime.Now;
             TimeSpan span = destTime - currentTime;
             string strCurrentTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
 
+<<<<<<< HEAD
             int dMtime = Convert.ToInt32(currentTime.Millisecond);
             int lMElapsed1 = Convert.ToInt32(m_elapsedWatch.ElapsedMilliseconds);
 
             // 绘制时间
             using (Graphics graphics = Graphics.FromImage(showBitmap))
+=======
+            hourDomainUpDown.Text = DateTime.Now.ToString("HH");
+            minuteDomainUpDown.Text = DateTime.Now.ToString("mm");
+            secondDomainUpDown.Text = DateTime.Now.ToString("ss");
+
+            Bitmap bitmap = new Bitmap(srcBitmap);
+
+            // 绘制时间
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
             {
                 string drawText = "Now is: " + 
                     strCurrentTime + 
                     ".\n" + 
+<<<<<<< HEAD
                     (Convert.ToInt32(span.TotalMilliseconds/1000)).ToString() + 
                     "s  to " + 
                     destTime.ToString("yyyy/MM/dd HH:mm:ss") +
@@ -223,6 +281,20 @@ namespace CountDownWallpaper
             m_elapsedWatch.Restart();
 
             GC.Collect();
+=======
+                    ((long)span.TotalSeconds).ToString() + 
+                    "s  to " + 
+                    destTime.ToString("yyyy/MM/dd HH:mm:ss") +
+                    ".";
+                //graphics.FillRectangle(Brushes.White, 0, 0, screenBounds.Width, screenBounds.Height);
+                graphics.DrawString(drawText, new Font("TimesNewRoman", 34), Brushes.White, screenBounds.Width/4, 50);
+
+            }
+
+            bitmap.Save(strImageDirectory + "createdImg.bmp");
+
+            int ret = SystemParametersInfo(0x0014, 0, strImageDirectory + "createdImg.bmp", 0);
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
         }
 
         public class AppSettings
@@ -303,27 +375,45 @@ namespace CountDownWallpaper
             if (Convert.ToInt32(hourDomainUpDown.Text) < 0 || Convert.ToInt32(hourDomainUpDown.Text) > 23)
             {
                 int ms = DateTime.Now.Millisecond;
+<<<<<<< HEAD
                 m_updateTimer.Interval = 1000 - ms;
                 m_updateTimer.Start();
                 m_elapsedWatch.Restart();
+=======
+                if (ms % 1000 != 0)
+                    CustomSleep(1000 - ms);
+                m_updateTimer.Start();
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
                 MessageBox.Show("无效的输入");
                 return;
             }
             if (Convert.ToInt32(minuteDomainUpDown.Text) < 0 || Convert.ToInt32(minuteDomainUpDown.Text) > 59)
             {
                 int ms = DateTime.Now.Millisecond;
+<<<<<<< HEAD
                 m_updateTimer.Interval = 1000 - ms;
                 m_updateTimer.Start();
                 m_elapsedWatch.Restart();
+=======
+                if (ms % 1000 != 0)
+                    CustomSleep(1000 - ms);
+                m_updateTimer.Start();
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
                 MessageBox.Show("无效的输入");
                 return;
             }
             if (Convert.ToInt32(secondDomainUpDown.Text) < 0 || Convert.ToInt32(secondDomainUpDown.Text) > 59)
             {
                 int ms = DateTime.Now.Millisecond;
+<<<<<<< HEAD
                 m_updateTimer.Interval = 1000 - ms;
                 m_updateTimer.Start();
                 m_elapsedWatch.Restart();
+=======
+                if (ms % 1000 != 0)
+                    CustomSleep(1000 - ms);
+                m_updateTimer.Start();
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
                 MessageBox.Show("无效的输入");
                 return;
             }
@@ -335,10 +425,18 @@ namespace CountDownWallpaper
             destTime = inputDate.AddHours(inputHour).AddMinutes(inputMinute).AddSeconds(inputSecond);
             setIniTime(destTime);
 
+<<<<<<< HEAD
             int nTimeNow = DateTime.Now.Millisecond;
             m_updateTimer.Interval = 1000 - nTimeNow;
             m_updateTimer.Start();
             m_elapsedWatch.Restart();
+=======
+            int milliseconds = DateTime.Now.Millisecond;
+            if (milliseconds % 1000 != 0 && milliseconds > 300)
+                CustomSleep(1000 - milliseconds);
+
+            m_updateTimer.Start();
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
 
             if (destTime < DateTime.Now)
             {
@@ -347,6 +445,25 @@ namespace CountDownWallpaper
             }
         }
 
+<<<<<<< HEAD
+=======
+        //private void isSlideShowCheckBox_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    m_updateTimer.Stop();
+
+        //    if (isSlideShowCheckBox.Checked)
+        //    {
+        //        m_updateTimer.Interval = 10000;
+        //    }
+        //    else
+        //    {
+        //        m_updateTimer.Interval = 1000;
+        //    }
+
+        //    m_updateTimer.Start();
+        //}
+
+>>>>>>> 00845a2107b43cfa50e0386741e02ba837561f93
         private void hourDomainUpDown_KeyPress(object sender, KeyPressEventArgs e)
         {
             // 只允许输入数字和退格键
