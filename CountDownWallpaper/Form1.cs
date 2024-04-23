@@ -28,7 +28,6 @@ namespace CountDownWallpaper
 
         Rectangle screenBounds = Screen.PrimaryScreen.Bounds;
 
-        // 创建一个与屏幕大小相同的位图
         Image srcImg;
         Bitmap srcBitmap;
         Bitmap showBitmap;
@@ -51,7 +50,6 @@ namespace CountDownWallpaper
                 string extension = Path.GetExtension(file).ToLower();
                 if (Array.Exists(strlistExtensions, ext => ext == extension))
                 {
-                    //numImages++;
                     strlistNames.Add(Path.GetFullPath(file));
                 }
             }
@@ -127,6 +125,12 @@ namespace CountDownWallpaper
             directoryInfo = new DirectoryInfo(Environment.CurrentDirectory + "\\tmp");
             if (!directoryInfo.Exists)
                 Directory.CreateDirectory(Environment.CurrentDirectory + "\\tmp");
+            hourDomainUpDown.Items.AddRange(generateHourList());
+            minuteDomainUpDown.Items.AddRange(generateMinuteList());
+            secondDomainUpDown.Items.AddRange(generateSecondList());
+
+            destTime = getIniTime();
+            nDisplayTime = getDisplayTime();
 
             strImgList = getImageNames(strImageDirectory);
 
@@ -186,6 +190,7 @@ namespace CountDownWallpaper
 
             // 绘制时间
             using (Graphics graphics = Graphics.FromImage(showBitmap))
+
             {
                 string drawText = "Now is: " + 
                     strCurrentTime + 
